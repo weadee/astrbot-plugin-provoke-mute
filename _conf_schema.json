@@ -1,0 +1,192 @@
+{
+  "enabled": {
+    "description": "总开关：是否启用挑衅自动禁言",
+    "type": "bool",
+    "default": true,
+    "hint": "关掉之后插件仍在运行，只是不再自动禁言（也可用指令「挑衅禁言 开 / 关」临时切换）"
+  },
+  "target_mode": {
+    "description": "判定模式",
+    "type": "string",
+    "default": "bot",
+    "options": ["bot", "any"],
+    "hint": "bot = 只处理冲着机器人来的挑衅（推荐，误伤少）；any = 全群扫描所有挑衅与辱骂"
+  },
+  "use_default_patterns": {
+    "description": "启用内置挑衅词库",
+    "type": "bool",
+    "default": true,
+    "hint": "关掉后只用 extra_patterns 和指令添加的自定义词条"
+  },
+  "casual_patterns": {
+    "description": "启用玩笑/抬杠类句式（误伤率高）",
+    "type": "bool",
+    "default": false,
+    "hint": "包含「你行你上」「不服来 solo」「你个二百五」等。群里这类话太常见，默认关闭以免误伤"
+  },
+  "dry_run": {
+    "description": "观察模式：命中只提示，不真禁言",
+    "type": "bool",
+    "default": true,
+    "hint": "默认开着！先看「挑衅禁言 记录」确认没有误伤，再执行「挑衅禁言 观察 关」转真实禁言"
+  },
+  "extra_patterns": {
+    "description": "额外词条（配置文件版）",
+    "type": "list",
+    "default": [],
+    "hint": "每项一条；以 re: 开头表示正则，例如 re:你是(?:猪|狗)吗"
+  },
+  "ban_duration": {
+    "description": "基础禁言时长（秒）",
+    "type": "int",
+    "default": 180,
+    "hint": "首次违规的禁言时长，1 ~ 2592000 秒"
+  },
+  "escalate": {
+    "description": "累犯升级：违规次数越多禁言越久",
+    "type": "bool",
+    "default": true,
+    "hint": "在 decay_minutes 时间窗口内重复违规会叠加时长"
+  },
+  "escalate_step": {
+    "description": "每多一次违规的时长增幅（倍数）",
+    "type": "float",
+    "default": 0.5,
+    "hint": "0.5 表示第 n 次时长 = 基础时长 x (1 + 0.5 x (n-1))"
+  },
+  "max_duration": {
+    "description": "单次禁言时长上限（秒）",
+    "type": "int",
+    "default": 3600,
+    "hint": "0 表示不限制"
+  },
+  "decay_minutes": {
+    "description": "违规计数重置时间（分钟）",
+    "type": "int",
+    "default": 30,
+    "hint": "超过这个时间没再违规，累犯次数清零"
+  },
+  "cooldown_seconds": {
+    "description": "同一用户的禁言冷却（秒）",
+    "type": "int",
+    "default": 10,
+    "hint": "冷却期内的消息不再触发，避免连发刷屏"
+  },
+  "detect_repeat": {
+    "description": "检测重复刷屏（同一人连续发相同消息）",
+    "type": "bool",
+    "default": true,
+    "hint": "短时间内同一个人反复发同一条消息也算违规，与消息内容无关"
+  },
+  "repeat_limit": {
+    "description": "触发禁言的重复条数",
+    "type": "int",
+    "default": 2,
+    "hint": "2 表示发两遍相同内容就禁言；0 或 1 表示关闭该检测（也可用指令「挑衅禁言 刷屏 <条数>」现场调整）"
+  },
+  "repeat_scope": {
+    "description": "重复刷屏的检测范围",
+    "type": "string",
+    "default": "all",
+    "options": ["all", "provocation"],
+    "hint": "all = 任何内容连发都算（默认，含「哈哈」「收到」之外的正常话）；provocation = 只有命中挑衅词的消息重复才算，最保守。觉得误伤多就执行「挑衅禁言 刷屏 挑衅」切过去"
+  },
+  "repeat_window_seconds": {
+    "description": "重复计数窗口（秒）",
+    "type": "int",
+    "default": 20,
+    "hint": "超出这个时间的旧消息不再计入重复"
+  },
+  "repeat_ignore_words": {
+    "description": "刷屏检测的豁免短句",
+    "type": "list",
+    "default": [],
+    "hint": "归一化后完整匹配这些词的消息不参与刷屏检测，例如 哈哈 / 收到 / 666。内置一批，这里填额外的"
+  },
+  "repeat_min_length": {
+    "description": "纳入检测的最短长度",
+    "type": "int",
+    "default": 2,
+    "hint": "去掉标点空格后至少这么长才检测，避免「嗯」「？」这类短消息被误判成刷屏"
+  },
+  "repeat_similarity": {
+    "description": "重复判定的相似度阈值",
+    "type": "float",
+    "default": 1.0,
+    "hint": "1.0 表示必须完全相同（忽略标点空格大小写）；0.9 表示九成相似也算重复"
+  },
+  "detect_poke": {
+    "description": "检测戳一戳连击",
+    "type": "bool",
+    "default": true,
+    "hint": "短时间内连续戳机器人也算挑衅"
+  },
+  "poke_limit": {
+    "description": "触发禁言的戳一戳次数",
+    "type": "int",
+    "default": 3,
+    "hint": "设为 0 表示不处理戳一戳"
+  },
+  "poke_window_seconds": {
+    "description": "戳一戳计数窗口（秒）",
+    "type": "int",
+    "default": 60
+  },
+  "exempt_group_staff": {
+    "description": "群主与群管理员豁免",
+    "type": "bool",
+    "default": true,
+    "hint": "强烈建议保持开启，否则机器人可能去禁言自己的管理员"
+  },
+  "exempt_users": {
+    "description": "豁免用户 QQ 号列表",
+    "type": "list",
+    "default": [],
+    "hint": "名单内的用户不会被自动禁言"
+  },
+  "exempt_groups": {
+    "description": "豁免群号列表",
+    "type": "list",
+    "default": [],
+    "hint": "名单内的群完全不检测"
+  },
+  "whitelist_groups": {
+    "description": "只在这些群里生效",
+    "type": "list",
+    "default": [],
+    "hint": "留空表示所有群都生效"
+  },
+  "bot_aliases": {
+    "description": "机器人的称呼关键词",
+    "type": "list",
+    "default": ["机器人", "bot", "小布"],
+    "hint": "bot 模式下，消息里出现这些词就认为是在说机器人"
+  },
+  "reply_templates": {
+    "description": "禁言时的回怼文案",
+    "type": "list",
+    "default": [
+      "{user} 挑衅值 +1，禁言 {duration}。这里不是擂台。",
+      "{user} 嘴挺快，先安静 {duration} 吧。",
+      "检测到挑衅，{user} 领走 {duration} 的禁言套餐。",
+      "{user} 第 {count} 次了，{duration}，慢慢想。"
+    ],
+    "hint": "随机选一条；可用占位符 {user} {duration} {count} {reason}"
+  },
+  "show_reason": {
+    "description": "在回怼消息里附上判定原因",
+    "type": "bool",
+    "default": true
+  },
+  "stop_after_mute": {
+    "description": "禁言后中断事件传播（不再走大模型）",
+    "type": "bool",
+    "default": true
+  },
+  "manage_allow_group_staff": {
+    "description": "允许群主/群管理员使用管理指令",
+    "type": "bool",
+    "default": true,
+    "hint": "关闭后只有 AstrBot 全局管理员能操作"
+  }
+}

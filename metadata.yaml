@@ -1,0 +1,8 @@
+name: astrbot_plugin_provoke_mute
+display_name: 挑衅禁言
+desc: 群友出言挑衅，机器人自动送上禁言套餐。支持自定义词库（关键词与正则）、仅针对机器人或全群扫描、累犯阶梯升级时长、戳一戳连击检测、群与用户豁免名单，并附带一整套管理指令。
+version: v1.0.0
+author: weedee
+support_platforms:
+  - aiocqhttp
+astrbot_version: ">=4.13.0"
